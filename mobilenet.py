@@ -62,8 +62,27 @@ model = add_new_last_layer(base_model)
 for layer in base_model.layers:
     layer.trainable=False
 
-import ipdb; ipdb.set_trace()
 model.compile(optimizer='adam',
         loss='mean_squared_error')
 
-history=model.fit_generator(data_gen(train_paths, train_i, train_l, 32, base_model), steps_per_epoch=len(train_paths)/32, epochs=5,validation_data=data_gen(valid_paths, valid_i, valid_l, 32, base_model), validation_steps=len(valid_paths)/32)
+history=model.fit_generator(data_gen(train_paths, train_i, train_l, 32, base_model), steps_per_epoch=len(train_paths)/32, epochs=1,validation_data=data_gen(valid_paths, valid_i, valid_l, 32, base_model), validation_steps=len(valid_paths)/32)
+
+model.save('models/mobilenet_model.h5')
+
+# Plot training & validation accuracy values
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
+
+# Plot training & validation loss values
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
